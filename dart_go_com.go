@@ -12,8 +12,8 @@ import "C"
 import "unsafe"
 
 type Trans struct {
-	channel String
-	payload String
+	channel string
+	payload string
 }
 
 func Init(api unsafe.Pointer) {
