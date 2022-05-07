@@ -11,6 +11,11 @@ package dart_go_com
 import "C"
 import "unsafe"
 
+type Trans struct {
+	channel String
+	payload String
+}
+
 func Init(api unsafe.Pointer) {
 	if C.Dart_InitializeApiDL(api) != 0 {
 		panic("failed to initialize Dart DL C API: version mismatch. " +
@@ -18,11 +23,13 @@ func Init(api unsafe.Pointer) {
 	}
 }
 
-func SendToPort(port int64, msg int64) {
+func SendToPort(port int64, channel string, payload string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
-	// cgo does not support unions so we are forced to do this
-	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(msg)
-	// func _Cfunc_GoDart_PostCObject(p0 _Ctype_Dart_Port_DL, p1 *_Ctype_struct__Dart_CObject) (r1 _Ctype__Bool)
+	data := &Trans{}
+	data.channel = channel
+	data.payload = payload
+	unsafeM := (*int64)(unsafe.Pointer(data))
+	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
 	C.GoDart_PostCObject(C.longlong(port), &obj)
 }
