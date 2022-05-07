@@ -13,7 +13,10 @@ import (
 	"C"
 	"unsafe"
 )
-import "fmt"
+
+type Msg struct {
+	Data string
+}
 
 func Init(api unsafe.Pointer) {
 	if C.Dart_InitializeApiDL(api) != 0 {
@@ -26,11 +29,10 @@ func SendToPort(port int64, channel string, payload string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
 
-	dataTpl := "{\"channel\":\"%s\",\"payload\":\"%s\"}"
-	data := fmt.Sprintf(dataTpl, channel, payload)
-	unsafeM := (*int64)(unsafe.Pointer(&data))
+	msg := &Msg{"hello world: " + channel + ":" + payload}
+	unsafeM := (*int64)(unsafe.Pointer(msg))
 
 	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
 	C.GoDart_PostCObject(C.int64_t(port), &obj)
-	data = nil
+	msg = nil
 }
