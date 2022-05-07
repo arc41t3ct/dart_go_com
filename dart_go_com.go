@@ -8,9 +8,8 @@ package dart_go_com
 // bool GoDart_PostCObject(Dart_Port_DL port, Dart_CObject* obj) {
 //   return Dart_PostCObject_DL(port, obj);
 // }
-
+import "C"
 import (
-	"C"
 	"unsafe"
 )
 
