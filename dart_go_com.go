@@ -11,9 +11,9 @@ package dart_go_com
 
 import (
 	"C"
-	"fmt"
 	"unsafe"
 )
+import "fmt"
 
 func Init(api unsafe.Pointer) {
 	if C.Dart_InitializeApiDL(api) != 0 {
