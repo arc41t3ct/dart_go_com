@@ -31,6 +31,6 @@ func SendToPort(port int64, channel string, payload string) {
 	data.payload = payload
 	unsafeM := (*int64)(unsafe.Pointer(data))
 	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
-	C.GoDart_PostCObject(C.longlong(port), &obj)
+	C.GoDart_PostCObject(C.int64_t(port), &obj)
 	data = nil
 }
