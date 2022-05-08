@@ -1,6 +1,7 @@
 package dart_go_com
 
 // #include "stdint.h"
+// #include "string.h"
 // #include "include/dart_api_dl.c"
 //
 // // Go does not allow calling C function pointers directly. So we are
@@ -9,13 +10,7 @@ package dart_go_com
 //   return Dart_PostCObject_DL(port, obj);
 // }
 import "C"
-import (
-	"unsafe"
-)
-
-type Msg struct {
-	Data string
-}
+import "unsafe"
 
 func Init(api unsafe.Pointer) {
 	if C.Dart_InitializeApiDL(api) != 0 {
@@ -24,9 +19,10 @@ func Init(api unsafe.Pointer) {
 	}
 }
 
-func SendToPort(port int64, data int64) {
+func SendToPort(port int64, data string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
-	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(data)
-	C.GoDart_PostCObject(C.int64_t(port), &obj)
+	arr := []string{data}
+	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = c.int64_t(arr)
+	C.GoDart_PostCObject(C.longlong(port), &obj)
 }
