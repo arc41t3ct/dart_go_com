@@ -31,8 +31,7 @@ func SendToPort(port int64, payload string) {
 
 	msg := "payload: " + payload
 	fmt.Println(msg)
-	unsafeM := (*int64)(unsafe.Pointer(&msg))
-
-	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
+	unsafeM := *(*C.int64_t)(unsafe.Pointer(&msg))
+	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(unsafeM)
 	C.GoDart_PostCObject(C.longlong(port), &obj)
 }
