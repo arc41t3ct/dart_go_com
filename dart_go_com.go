@@ -24,7 +24,7 @@ func Init(api unsafe.Pointer) {
 	}
 }
 
-func SendToPort(port int64, payload string) {
+func SendToPort(port int64, payload GoString) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
 
