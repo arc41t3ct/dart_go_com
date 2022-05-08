@@ -22,7 +22,6 @@ func Init(api unsafe.Pointer) {
 func SendToPort(port int64, data string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
-	arr := []string{data}
-	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.CString(&arr)
+	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.CString(data)
 	C.GoDart_PostCObject(C.longlong(port), &obj)
 }
