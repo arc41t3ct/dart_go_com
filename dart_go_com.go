@@ -33,5 +33,4 @@ func SendToPort(port int64, payload string) {
 
 	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
 	C.GoDart_PostCObject(C.int64_t(port), &obj)
-	msg = ""
 }
