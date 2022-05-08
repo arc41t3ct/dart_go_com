@@ -1,18 +1,22 @@
 package dart_go_com
 
+import (
+	"C"
+	"fmt"
+	"os"
+	"unsafe"
+)
+
 // #include "stdlib.h"
 // #include "stdint.h"
 // #include "stdio.h"
 // #include "include/dart_api_dl.c"
 //
-// // Go does not allow calling C function pointers directly. So we are
-// // forced to provide a trampoline.
 // bool GoDart_PostCObject(Dart_Port_DL port, int64_t ptrAddr) {
-//   return Dart_PostCObject_DL(port, obj);
-//   Dart_CObject dartObj;
-//   dartObj.type = Dart_CObject_kInt64;
-//	 dartObj.value.as_int64 = ptrAddr;
-//	 return Dart_PostCObject_DL(port, &dartObj);
+//   	Dart_CObject dartObj;
+//   	dartObj.type = Dart_CObject_kInt64;
+//	 	dartObj.value.as_int64 = ptrAddr;
+//	 	return Dart_PostCObject_DL(port, &dartObj);
 // }
 //
 // typedef struct ComObj{
@@ -28,19 +32,17 @@ package dart_go_com
 // }
 //
 // void clearComStructMemory(ComObj pCom) {
-//      free(&pCom.data);
+//      free(&pCom->data);
+//		free(&pCom);
 // }
 
-import "C"
-import (
-	"fmt"
-	"unsafe"
-)
+
 
 func Init(api unsafe.Pointer) {
 	if C.Dart_InitializeApiDL(api) != 0 {
 		fmt.Errorf("failed to initialize Dart DL C API: version mismatch. " +
 			"must update include/ to match Dart SDK version")
+		os.Exit(1)
 	}
 }
 
