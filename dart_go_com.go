@@ -10,6 +10,7 @@ package dart_go_com
 // }
 import "C"
 import (
+	"fmt"
 	"unsafe"
 )
 
@@ -24,11 +25,12 @@ func Init(api unsafe.Pointer) {
 	}
 }
 
-func SendToPort(port int64, payload GoString) {
+func SendToPort(port int64, payload string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
 
 	msg := "payload: " + payload
+	fmt.Println(msg)
 	unsafeM := (*int64)(unsafe.Pointer(&msg))
 
 	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
