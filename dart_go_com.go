@@ -24,12 +24,12 @@ func Init(api unsafe.Pointer) {
 	}
 }
 
-func SendToPort(port int64, channel string, payload string) {
+func SendToPort(port int64, payload string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
 
-	msg := &Msg{"hello world: " + channel + ":" + payload}
-	unsafeM := (*int64)(unsafe.Pointer(msg))
+	msg := "payload: " + payload
+	unsafeM := (*int64)(unsafe.Pointer(&msg))
 
 	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.int64_t(*unsafeM)
 	C.GoDart_PostCObject(C.int64_t(port), &obj)
