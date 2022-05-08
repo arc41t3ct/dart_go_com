@@ -9,6 +9,19 @@ package dart_go_com
 // bool GoDart_PostCObject(Dart_Port_DL port, Dart_CObject* obj) {
 //   return Dart_PostCObject_DL(port, obj);
 // }
+//
+// typedef struct ComObj{
+//      char *data;
+// }ComObj;
+//
+// int64_t GetCom(void **ppCom, char* data) {
+//      ComObj *pCom= (ComObj *)malloc(sizeof(ComObj));
+//      pCom->data=data;
+//      *ppCom = pCom;
+//      int64_t ptr = (int64_t)pCom;
+//      return ptr;
+// }
+
 import "C"
 import "unsafe"
 
@@ -22,6 +35,9 @@ func Init(api unsafe.Pointer) {
 func SendToPort(port int64, data string) {
 	var obj C.Dart_CObject
 	obj._type = C.Dart_CObject_kInt64
-	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = C.CString(data)
+	var pcom unsafe.Pointer
+	ptrAddr := C.GetCom(&pcom, C.CString(data))
+	*(*C.int64_t)(unsafe.Pointer(&obj.value[0])) = ptrAddr
 	C.GoDart_PostCObject(C.longlong(port), &obj)
+	defer C.free(pcom)
 }
